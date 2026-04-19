@@ -75,7 +75,7 @@ export const TextGenerateEffect = ({
 				{wordsArray.map((word) => (
 					<motion.span
 						key={word}
-						className="main-word font-handwriting opacity-0
+						className="main-word opacity-0
               text-5xl sm:text-6xl md:text-7xl lg:text-8xl
               text-white"
 						style={{
@@ -93,7 +93,7 @@ export const TextGenerateEffect = ({
 						{subtitleArray.map((word) => (
 							<motion.span
 								key={word}
-								className="sub-word font-handwriting opacity-0
+								className="sub-word opacity-0
                   text-base sm:text-lg md:text-xl
                   text-white/60"
 								style={{

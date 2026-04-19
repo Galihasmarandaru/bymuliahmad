@@ -189,9 +189,7 @@ function HorizontalGallery() {
 					<p className="text-xs tracking-[0.3em] uppercase mb-2 text-black/30">
 						Works
 					</p>
-					<p className="font-handwriting text-5xl w-3/4 text-black/80">
-						Save your memories
-					</p>
+					<p className="text-5xl w-3/4 text-black/80">Save your memories</p>
 				</div>
 
 				{galleryImages.map((item, idx) => (
@@ -382,7 +380,7 @@ function App() {
 
 			<MasonryGallery />
 
-			<section className="font-handwriting flex py-24 items-center justify-center bg-[#121212]">
+			<section className="flex py-24 items-center justify-center bg-[#121212]">
 				<div className="text-center w-2/3 px-10 space-y-12">
 					<p className="text-2xl font-light text-white">If you like my taste</p>
 					<p className="text-6xl text-white">Let's work together</p>
