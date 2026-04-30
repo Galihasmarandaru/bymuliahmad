@@ -232,8 +232,8 @@ function HorizontalGallery() {
 						<img
 							src={item.src}
 							alt={`Gallery ${idx + 1}`}
-							loading="eager"
-							decoding="sync"
+							loading="lazy"
+							decoding="async"
 							className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
 						/>
 					</div>
@@ -311,7 +311,7 @@ function MasonryGallery() {
 						<img
 							src={item.src}
 							alt=""
-							loading="eager"
+							loading="lazy"
 							className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
 						/>
 					</div>
@@ -337,7 +337,7 @@ function MasonryGallery() {
 									<img
 										src={item.src}
 										alt=""
-										loading="eager"
+										loading="lazy"
 										className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
 									/>
 								</div>
@@ -365,7 +365,7 @@ function MasonryGallery() {
 									<img
 										src={item.src}
 										alt=""
-										loading="eager"
+										loading="lazy"
 										className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
 									/>
 								</div>
@@ -381,6 +381,12 @@ function App() {
 	const title = "# by muliadi ahmad";
 
 	useEffect(() => {
+		// Skip preloading on touch devices — loading 21+ high-res images
+		// simultaneously can crash mobile WebViews (e.g. Instagram in-app browser).
+		const isTouch =
+			"ontouchstart" in window || navigator.maxTouchPoints > 0;
+		if (isTouch) return;
+
 		const allImages = [
 			...masonryImages.map((i) => i.src),
 			...galleryImages.map((i) => i.src),
