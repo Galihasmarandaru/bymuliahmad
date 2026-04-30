@@ -25,7 +25,6 @@ import img12 from "../../public/img/gallery/gallery12.jpg";
 import img13 from "../../public/img/gallery/gallery13.jpg";
 import img14 from "../../public/img/gallery/gallery14.jpg";
 import img15 from "../../public/img/gallery/gallery15.jpg";
-import img16 from "../../public/img/gallery/gallery16.jpg";
 import img17 from "../../public/img/gallery/gallery17.jpg";
 import img18 from "../../public/img/gallery/gallery18.jpg";
 import img19 from "../../public/img/gallery/gallery19.jpg";
@@ -119,26 +118,44 @@ function ParallaxSection({
 
 	return (
 		<section
-			className="relative overflow-hidden flex flex-col min-h-screen"
+			className="relative overflow-hidden flex flex-col"
 			style={{ backgroundColor: "#121212" }}
 		>
+			{/* Desktop: parallax image on the left */}
 			{isWide && (
-				<div
-					ref={bgRef}
-					className="absolute left-0 -top-48 will-change-transform"
-					style={{ width: "45%", height: "140%" }}
-				>
+				<>
+					<div
+						ref={bgRef}
+						className="absolute left-0 -top-48 will-change-transform"
+						style={{ width: "45%", height: "140%" }}
+					>
+						<img
+							src={src}
+							alt=""
+							loading="eager"
+							decoding="sync"
+							className="h-full w-full object-cover object-center"
+						/>
+					</div>
+					<div className="relative z-10 min-h-screen">{children}</div>
+				</>
+			)}
+
+			{/* iPad & Mobile: image at bottom with 20% downward offset, text overlay at top-left */}
+			{!isWide && (
+				<div className="relative flex justify-center items-end px-6 pt-10 pb-0 overflow-hidden min-h-screen">
 					<img
 						src={src}
 						alt=""
 						loading="eager"
 						decoding="sync"
-						className="h-full w-full object-cover object-center"
+						className="w-full max-w-md rounded-sm object-cover object-center"
+						style={{ aspectRatio: "3/4", transform: "translateY(5%)" }}
 					/>
+					{/* Text overlay positioned at top-left */}
+					<div className="absolute top-4 left-8 z-10">{children}</div>
 				</div>
 			)}
-
-			<div className="relative z-10">{children}</div>
 		</section>
 	);
 }
@@ -378,7 +395,7 @@ function App() {
 	return (
 		<>
 			<ParallaxSection src={coverImg}>
-				<div className="flex items-center justify-end text-white min-h-screen px-0 py-12 [@media(min-width:1255px)]:py-0">
+				<div className="flex items-start justify-start text-white py-8 px-0 [@media(min-width:1255px)]:items-center [@media(min-width:1255px)]:justify-end [@media(min-width:1255px)]:min-h-screen [@media(min-width:1255px)]:py-0">
 					<TextGenerateEffect
 						words={title}
 						subtitle="a Professional Photographer"

@@ -67,11 +67,11 @@ export const TextGenerateEffect = ({
 	return (
 		<div
 			className={cn(
-				"flex flex-col items-end px-6 sm:px-12 md:px-16 lg:px-24 w-full",
+				"flex flex-col items-start px-6 sm:px-12 md:px-16 lg:px-24 w-full [@media(min-width:1255px)]:items-end",
 				className,
 			)}
 		>
-			<motion.div ref={scope} className="flex flex-wrap justify-end max-w-full">
+			<motion.div ref={scope} className="flex flex-wrap justify-start [@media(min-width:1255px)]:justify-end max-w-full">
 				{wordsArray.map((word) => (
 					<motion.span
 						key={word}
@@ -89,7 +89,7 @@ export const TextGenerateEffect = ({
 				))}
 
 				{subtitleArray.length > 0 && (
-					<div className="flex w-full justify-end mt-2 flex-wrap gap-y-1">
+					<div className="flex w-full justify-start [@media(min-width:1255px)]:justify-end mt-2 flex-wrap gap-y-1">
 						{subtitleArray.map((word) => (
 							<motion.span
 								key={word}
