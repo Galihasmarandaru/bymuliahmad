@@ -26,54 +26,63 @@ function isIOS(): boolean {
 
 export function useLenis() {
 	useEffect(() => {
-		const ios = isIOS();
+		try {
+			const ios = isIOS();
 
-		// On iOS Safari, Lenis' virtual scroll fights with the native
-		// rubber-band / momentum behaviour and blocks touch-scrolling entirely.
-		// → Use Lenis in "native" wrapper mode so it only provides the
-		//   ScrollTrigger sync while letting the browser handle touch natively.
-		if (ios) {
-			// Let the browser scroll natively — don't hide overflow
+			// On iOS Safari, Lenis' virtual scroll fights with the native
+			// rubber-band / momentum behaviour and blocks touch-scrolling entirely.
+			// → Use Lenis in "native" wrapper mode so it only provides the
+			//   ScrollTrigger sync while letting the browser handle touch natively.
+			if (ios) {
+				// Let the browser scroll natively — don't hide overflow
+				document.documentElement.style.overflow = "";
+				document.body.style.overflow = "";
+
+				lenis = new Lenis({
+					wrapper: window as unknown as HTMLElement,
+					content: document.documentElement,
+					lerp: 0.1,
+					smoothWheel: false, // don't hijack wheel on iOS (rarely relevant)
+					touchMultiplier: 0, // let browser handle touch entirely
+					syncTouch: false,
+				});
+			} else {
+				document.documentElement.style.overflow = "hidden";
+				document.body.style.overflow = "hidden";
+
+				lenis = new Lenis({
+					lerp: 0.1,
+					smoothWheel: true,
+					wheelMultiplier: 1,
+					touchMultiplier: 1.5,
+				});
+			}
+
+			lenis.on("scroll", ScrollTrigger.update);
+
+			const tickerFn = (time: number) => {
+				lenis?.raf(time * 1000);
+			};
+
+			gsap.ticker.add(tickerFn);
+			gsap.ticker.lagSmoothing(0);
+
+			return () => {
+				lenis?.off("scroll", ScrollTrigger.update);
+				gsap.ticker.remove(tickerFn);
+				for (const t of ScrollTrigger.getAll()) t.kill();
+				lenis?.destroy();
+				lenis = null;
+				document.documentElement.style.overflow = "";
+				document.body.style.overflow = "";
+			};
+		} catch (err) {
+			// If Lenis fails to initialise (e.g. on iOS in-app browsers),
+			// fall back to native scrolling so the page still works.
+			console.warn("Lenis init failed, falling back to native scroll:", err);
 			document.documentElement.style.overflow = "";
 			document.body.style.overflow = "";
-
-			lenis = new Lenis({
-				wrapper: window as unknown as HTMLElement,
-				content: document.documentElement,
-				lerp: 0.1,
-				smoothWheel: false, // don't hijack wheel on iOS (rarely relevant)
-				touchMultiplier: 0, // let browser handle touch entirely
-				syncTouch: false,
-			});
-		} else {
-			document.documentElement.style.overflow = "hidden";
-			document.body.style.overflow = "hidden";
-
-			lenis = new Lenis({
-				lerp: 0.1,
-				smoothWheel: true,
-				wheelMultiplier: 1,
-				touchMultiplier: 1.5,
-			});
+			return () => {};
 		}
-
-		lenis.on("scroll", ScrollTrigger.update);
-
-		const tickerFn = (time: number) => {
-			lenis?.raf(time * 1000);
-		};
-
-		gsap.ticker.add(tickerFn);
-		gsap.ticker.lagSmoothing(0);
-
-		return () => {
-			lenis?.off("scroll", ScrollTrigger.update);
-			gsap.ticker.remove(tickerFn);
-			for (const t of ScrollTrigger.getAll()) t.kill();
-			lenis?.destroy();
-			lenis = null;
-			document.documentElement.style.overflow = "";
-			document.body.style.overflow = "";
-		};
 	}, []);
 }

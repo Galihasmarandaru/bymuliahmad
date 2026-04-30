@@ -90,7 +90,9 @@ function ParallaxSection({
 	children: React.ReactNode;
 }) {
 	const bgRef = useRef<HTMLDivElement>(null);
-	const [isWide, setIsWide] = useState(window.innerWidth >= 1255);
+	const [isWide, setIsWide] = useState(
+		typeof window !== "undefined" ? window.innerWidth >= 1255 : true,
+	);
 
 	useEffect(() => {
 		const check = () => setIsWide(window.innerWidth >= 1255);
