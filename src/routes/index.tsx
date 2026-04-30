@@ -38,10 +38,10 @@ export function DraggableCardDemo() {
 			image: img7,
 			className: "absolute top-30 left-[10%] rotate-[-5deg]",
 		},
-		{
-			image: img16,
-			className: "absolute top-50 left-[30%] rotate-[-7deg]",
-		},
+		// {
+		// 	image: img16,
+		// 	className: "absolute top-50 left-[30%] rotate-[-7deg]",
+		// },
 		{
 			image: img17,
 			className: "absolute top-30 left-[15%] rotate-[8deg]",
@@ -152,6 +152,10 @@ function HorizontalGallery() {
 		const track = trackRef.current;
 		if (!section || !track) return;
 
+		// On iOS / touch devices, "fixed" pinType is more reliable than "transform"
+		const isTouchDevice =
+			"ontouchstart" in window || navigator.maxTouchPoints > 0;
+
 		// Tunggu sampai ScrollTrigger siap
 		const ctx = gsap.context(() => {
 			gsap.to(track, {
@@ -161,9 +165,9 @@ function HorizontalGallery() {
 					trigger: section,
 					start: "top top",
 					end: () => `+=${track.scrollWidth - window.innerWidth}`,
-					scrub: 2.5, // ← naikkan dari 1, coba 2–5 sesuai selera
+					scrub: isTouchDevice ? 1 : 2.5,
 					pin: true,
-					pinType: "transform",
+					pinType: isTouchDevice ? "fixed" : "transform",
 					anticipatePin: 1,
 					invalidateOnRefresh: true,
 				},
@@ -179,7 +183,11 @@ function HorizontalGallery() {
 	}, []);
 
 	return (
-		<div ref={sectionRef} className="overflow-hidden bg-white">
+		<div
+			ref={sectionRef}
+			className="overflow-hidden bg-white"
+			style={{ touchAction: "pan-y" }}
+		>
 			<div
 				ref={trackRef}
 				className="flex h-screen items-center gap-16 px-16 will-change-transform"
@@ -189,7 +197,7 @@ function HorizontalGallery() {
 					<p className="text-xs tracking-[0.3em] uppercase mb-2 text-black/30">
 						Works
 					</p>
-					<p className="text-5xl w-3/4 text-black/80">Save your memories</p>
+					{/* <p className="text-5xl w-3/4 text-black/80">Save your memories</p> */}
 				</div>
 
 				{galleryImages.map((item, idx) => (
@@ -233,6 +241,10 @@ const masonryImages = [
 	{ src: img18, height: "480px" },
 	{ src: img15, height: "430px" },
 	{ src: img8, height: "550px" },
+	{ src: img7, height: "550px" },
+	{ src: img17, height: "550px" },
+	{ src: img19, height: "550px" },
+	{ src: img20, height: "550px" },
 ];
 
 function MasonryGallery() {
@@ -376,7 +388,7 @@ function App() {
 
 			<HorizontalGallery />
 
-			<DraggableCardDemo />
+			{/* <DraggableCardDemo /> */}
 
 			<MasonryGallery />
 
